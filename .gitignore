@@ -1,0 +1,40 @@
+# Diretórios do sistema
+/.idea/
+/.vscode/
+/node_modules/
+/vendor/
+
+# Arquivos de configuração
+*.env
+*.local
+
+# Arquivos de log
+*.log
+
+# Diretórios de cache
+/cache/
+/logs/
+
+# Arquivos de backup
+*.bak
+*.tmp
+
+# Diretórios do Composer
+/composer.lock
+/vendor/
+
+# Diretórios de testes
+/tests/
+
+# Arquivos gerados por IDEs
+*.sublime-workspace
+*.sublime-project
+*.DS_Store
+Thumbs.db
+
+# Arquivos de compilação
+*.phar
+
+# Outros arquivos que não devem ser rastreados
+*.swp
+*~
