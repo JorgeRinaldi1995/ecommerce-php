@@ -12,8 +12,16 @@ class User {
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
-    public static function create(string $name, string $email, string $password, string $doc): bool {
-        $stmt = Database::connect()->prepare("INSERT INTO users (name, email, password, doc) VALUES (?, ?, ?, ?)");
-        return $stmt->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT), $doc]);
+    public static function create(string $name, string $email, string $password, string $doc, int $role): bool {
+        $stmt = Database::connect()->prepare("INSERT INTO users (name, email, password, doc, role) VALUES (?, ?, ?, ?, ?)");
+        return $stmt->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT), $doc, $role]);
     }
+
+    public static function findById($id) {
+        $stmt = Database::connect()->prepare('SELECT id, name, email, role FROM users WHERE id = :id');
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 }

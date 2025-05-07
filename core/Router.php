@@ -14,16 +14,25 @@ class Router {
     }
 
     public function dispatch(string $uri) {
-        $uri = parse_url($uri, PHP_URL_PATH);
+        $uriPath = parse_url($uri, PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
-
-        if (isset($this->routes[$method][$uri])) {
-            [$controller, $method] = explode('@', $this->routes[$method][$uri]);
-            $controller = "App\\Controllers\\$controller";
-            (new $controller)->$method();
-        } else {
-            http_response_code(404);
-            echo "Página não encontrada!";
+    
+        foreach ($this->routes[$method] ?? [] as $route => $controllerMethod) {
+            $routePattern = preg_replace('/\{[^\/]+\}/', '([^\/]+)', $route);
+            $routePattern = "#^" . $routePattern . "$#";
+    
+            if (preg_match($routePattern, $uriPath, $matches)) {
+                array_shift($matches); // Remove o match completo
+                [$controller, $methodName] = explode('@', $controllerMethod);
+                $controller = "App\\Controllers\\$controller";
+    
+                call_user_func_array([new $controller, $methodName], $matches);
+                return;
+            }
         }
+    
+        http_response_code(404);
+        echo "Página não encontrada!";
     }
+    
 }
